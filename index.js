@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 
 
@@ -39,6 +39,39 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+
+    app.get("/users/:id", async(req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = {
+        _id: new ObjectId(id),
+      };
+      const result = await userCollection.findOne(query);
+      console.log(result);
+      res.send(result);
+    });
+
+    app.put("/users/:id", async(req, res) =>{
+      const id = req.params.id;
+      const data = req.body;
+      const filter = {
+        _id: new ObjectId(id),
+      };
+      const options = { upsert: true};
+      const updateData = {
+        $set:{
+          image: data.image,
+          name: data.name,
+          brand: data.brand,
+          type: data.type,
+          price: data.price,
+          shortDescription: data.shortDescription
+
+        },
+      };
+      const result = await userCollection.updateOne(filter, updateData, options);
+      res.send(result);
+    })
 
     app.get("/users", async(req, res) =>{
       const result = await userCollection.find().toArray();
