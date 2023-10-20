@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 
@@ -14,8 +15,8 @@ const port = process.env.PORT || 5000;
 
 
 
-const uri = "mongodb+srv://mohsenalmahmud:Q4e0dhWZvKzkIjV9@cluster0.9qwfxyj.mongodb.net/?retryWrites=true&w=majority";
-
+const uri = `mongodb+srv://${process.env.AM_USER}:${process.env.AM_PASS}@cluster0.9qwfxyj.mongodb.net/?retryWrites=true&w=majority`;
+console.log(uri);
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -31,6 +32,7 @@ async function run() {
     await client.connect();
 
     const userCollection = client.db("userDB").collection("users");
+    // const productCollection = client.db("productDB").collection("products");
 
     app.post("/users", async(req, res) =>{
       const user = req.body;
@@ -39,6 +41,14 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+
+    // app.post("/products", async(req, res) =>{
+    //   const product = req.body;
+    //   console.log("product", product);
+    //   const result = await productCollection.insertOne(product);
+    //   console.log(result);
+    //   res.send(result);
+    // });
 
     app.get("/users/:id", async(req, res) => {
       const id = req.params.id;
@@ -50,6 +60,17 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+
+    // app.get("/users/:id", async(req, res) => {
+    //   const id = req.params.id;
+    //   console.log(id);
+    //   const query = {
+    //     _id: new ObjectId(id),
+    //   };
+    //   const result = await productCollection.findOne(query);
+    //   console.log(result);
+    //   res.send(result);
+    // });
 
     app.put("/users/:id", async(req, res) =>{
       const id = req.params.id;
@@ -65,7 +86,8 @@ async function run() {
           brand: data.brand,
           type: data.type,
           price: data.price,
-          shortDescription: data.shortDescription
+          shortDescription: data.shortDescription,
+          rating: data.rating
 
         },
       };
