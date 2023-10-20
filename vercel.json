@@ -1,3 +1,4 @@
+
 {
     "version": 2,
     "builds": [
@@ -10,7 +11,7 @@
         {
             "src": "/(.*)",
             "dest": "/",
-            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTION"]
+            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
         }
     ]
 }
